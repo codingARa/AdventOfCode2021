@@ -18,6 +18,11 @@ namespace Day02Code
             Console.WriteLine($"Answer to Part 2: {answer2}");
         }
 
+        /// <summary>
+        /// steer submarine by input directions according to rules of part 1
+        /// </summary>
+        /// <param name="directions"></param>
+        /// <returns></returns>
         public static int SteerSubmarinePart1(List<string> directions)
         {
             int fwd = 0;
@@ -39,6 +44,12 @@ namespace Day02Code
             return fwd*depth;
         }
 
+
+        /// <summary>
+        /// steer submarine by input directions according to rules of part 2
+        /// </summary>
+        /// <param name="directions"></param>
+        /// <returns></returns>
         public static int SteerSubmarinePart2(List<string> directions)
         {
             int aim = 0;
