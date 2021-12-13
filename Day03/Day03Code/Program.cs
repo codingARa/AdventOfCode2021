@@ -66,5 +66,9 @@ namespace Day03Code
             return gamma_rate*epsilon_rate;
         }
 
+        public static int LifeSupportRatingPart2(List<string> inputString)
+        {
+            return 1;
+        }
     }
 }
