@@ -8,7 +8,7 @@ namespace Day03Test
     {
 
         [Test]
-        public void Test1()
+        public void Test1_Part1()
         {
             List<string> inputList = new() { 
                 "00100",
@@ -24,7 +24,8 @@ namespace Day03Test
                 "00010",
                 "01010"
             };
-            Assert.Pass();
+            int answer = Day03Code.Program.PowerConsumptionPart1(inputList);
+            Assert.AreEqual(198, answer);
         }
     }
 }
