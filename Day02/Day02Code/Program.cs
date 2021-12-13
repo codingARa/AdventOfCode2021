@@ -12,11 +12,13 @@ namespace Day02Code
             Console.WriteLine("Let's solve Day 02");
             var inputString = File.ReadAllLines("input.txt")
                 .ToList();
-            int answer1 = SteerSubmarine(inputString);
+            int answer1 = SteerSubmarinePart1(inputString);
             Console.WriteLine($"Answer to Part 1: {answer1}");
+            int answer2 = SteerSubmarinePart2(inputString);
+            Console.WriteLine($"Answer to Part 2: {answer2}");
         }
 
-        public static int SteerSubmarine(List<string> directions)
+        public static int SteerSubmarinePart1(List<string> directions)
         {
             int fwd = 0;
             int depth = 0;
@@ -32,6 +34,30 @@ namespace Day02Code
                 } else if (dir[0] == "down")
                 {
                     depth += Int32.Parse(dir[1]);
+                } else { throw new Exception("unexpected input argument"); }
+            }
+            return fwd*depth;
+        }
+
+        public static int SteerSubmarinePart2(List<string> directions)
+        {
+            int aim = 0;
+            int fwd = 0;
+            int depth = 0;
+            foreach (string direction in directions)
+            {
+                var dir = direction.Split(" ");
+                if (dir[0] == "forward")
+                {
+                    int newfwd = Int32.Parse(dir[1]);
+                    fwd += newfwd;
+                    depth += aim * newfwd;
+                } else if (dir[0] == "up")
+                {
+                    aim -= Int32.Parse(dir[1]);
+                } else if (dir[0] == "down")
+                {
+                    aim += Int32.Parse(dir[1]);
                 } else { throw new Exception("unexpected input argument"); }
             }
             return fwd*depth;
