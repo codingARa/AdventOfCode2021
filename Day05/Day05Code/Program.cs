@@ -119,8 +119,7 @@ namespace Day05Code {
                         pair[0] += horizontal;
                     }
                 }
-                // falling: marching in x direction from bottom large y to
-                // small y
+                // falling: marching in x direction from large y to small y
                 else if (pair[0].Y > pair[1].Y) {
                     while (pair[0].X <= pair[1].X) {
                         vents.Add(pair[0]);
