@@ -77,38 +77,22 @@ namespace Day05Code {
             List<List<Vector2>> answer = new();
             foreach (var line in inputStrings) {
                 var pairs = line.Replace(" -> ", ",").Split(",").Select(Int32.Parse).ToList();
+
                 // make sure, that the pair in answer goes from
                 // left to right, or top to bottom
-                if (pairs[0] < pairs[2]) {
-                    answer.Add(
-                        new List<Vector2>() {
-                            new(pairs[0], pairs[1]),
-                            new(pairs[2], pairs[3]),
-                        });
+                Vector2 p1 = new(pairs[0], pairs[1]);
+                Vector2 p2 = new(pairs[2], pairs[3]);
+                // checks for horizontal, rising and falling lines
+                if (p1.X < p2.X) {
+                    answer.Add(new List<Vector2>(){p1, p2});
                 }
-                else if (pairs[0] > pairs[2]){
-                    answer.Add(
-                        new List<Vector2>() {
-                            new(pairs[2], pairs[3]),
-                            new(pairs[0], pairs[1]),
-                        });
+                else if (p1.X > p2.X) {
+                    answer.Add(new List<Vector2>(){p2, p1}); 
                 }
-                // checks for vertical lines exclusively
+                //checks for vertical lines exclusively
                 else {
-                    if (pairs[1] < pairs[3]) {
-                    answer.Add(
-                        new List<Vector2>() {
-                            new(pairs[0], pairs[1]),
-                            new(pairs[2], pairs[3]),
-                        });
-                    }
-                    else {
-                    answer.Add(
-                        new List<Vector2>() {
-                            new(pairs[2], pairs[3]),
-                            new(pairs[0], pairs[1]),
-                        }); 
-                    }
+                    if ( p1.Y < p2.Y ) answer.Add(new List<Vector2>(){p1, p2}); 
+                    else answer.Add(new List<Vector2>(){p2, p1}); 
                 }
             }
             return answer;
