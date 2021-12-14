@@ -21,7 +21,7 @@ namespace Day04Test
         public void Test2_Part1_truncated_test_input() {
             var inputStrings = File.ReadAllLines("truncatedTestInput.txt")
                 .ToList();
-            int answer = Program.PlayBingo(inputStrings);
+            int answer = Program.PlayBingoToWin(inputStrings);
             Assert.AreEqual(4512, answer);
         }
 
@@ -47,8 +47,16 @@ namespace Day04Test
         public void Test4_Part1_Full_test_Input() {
             var inputStrings = File.ReadAllLines("testInput.txt")
                 .ToList();
-            int answer = Day04Code.Program.PlayBingo(inputStrings);
+            int answer = Program.PlayBingoToWin(inputStrings);
             Assert.AreEqual(4512, answer);
+        }
+
+        [Test]
+        public void Test5_Part2_Full_test_Input() {
+            var inputStrings = File.ReadAllLines("testInput.txt")
+                .ToList();
+            int answer = Program.PlayBingoToLoose(inputStrings);
+            Assert.AreEqual(1924, answer);
         }
     }
 }

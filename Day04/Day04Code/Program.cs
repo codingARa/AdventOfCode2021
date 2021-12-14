@@ -67,33 +67,69 @@ namespace Day04Code
             var inputStrings = File.ReadAllLines("input.txt")
                 .ToList();
 
-            int answer1 = PlayBingo(inputStrings);
+            int answer1 = PlayBingoToWin(inputStrings);
             Console.WriteLine($"answer to part 1: {answer1}");
+
+            int answer2 = PlayBingoToLoose(inputStrings);
+            Console.WriteLine($"answer to part 2: {answer2}");
         }
 
-        public static int PlayBingo(List<string> inputStrings) {
+        public static int PlayBingoToWin(List<string> inputStrings) {
             List<int> chosen_numbers = ParseChosenNumbers(inputStrings[0]);
             List <BingoCard> bingoCards = ParseBingoNumbers(inputStrings.Skip(2).ToList());
 
             List<(BingoCard, int)> wonCards = new();
+            // draw a number one by one
             foreach (int next_number in chosen_numbers) {
+                // play as long as no winner is found ...
                 if (wonCards.Count == 0) {
                     foreach (var card in bingoCards) {
                         card.SearchNumber(next_number);
-                        bool bingoFound = card.FindBingo();
-                        if (bingoFound) {
+                        if (card.FindBingo()) {
                             wonCards.Add((card, card.EvaluateBingoCard(next_number)));
-                            Console.WriteLine($"last number: {next_number}");
                         }
                     } 
                 } else { break; }
             }
 
+            // check for the winner with the highest score in the last round
             int winning_sum = 0;
-            foreach (var winner in wonCards) {
-                if (winner.Item2 > winning_sum) { winning_sum = winner.Item2; }
+            if (wonCards.Count > 1) {
+                foreach (var winner in wonCards) {
+                    if (winner.Item2 > winning_sum) { winning_sum = winner.Item2; }
+                }
+            }
+            else {
+                winning_sum = wonCards[0].Item2;
             }
             return winning_sum; 
+        }
+        public static int PlayBingoToLoose(List<string> inputStrings) {
+            List<int> chosen_numbers = ParseChosenNumbers(inputStrings[0]);
+            List<BingoCard> bingoCards = ParseBingoNumbers(inputStrings.Skip(2).ToList());
+
+            List<(BingoCard, int)> wonCards = new();
+            // draw the numbers one by one
+            foreach (int next_number in chosen_numbers) {
+                List<int> index_to_remove = new();
+                for (int i = 0; i < bingoCards.Count; i++) {
+                    bingoCards[i].SearchNumber(next_number);
+                    bool bingoFound = bingoCards[i].FindBingo();
+                    if (bingoFound) {
+                        wonCards.Add((bingoCards[i], bingoCards[i].EvaluateBingoCard(next_number)));
+                        // keep track of the index on the new winner
+                        index_to_remove.Add(i);
+                    }
+                }
+                // remove the last winner(s) from the last round
+                index_to_remove.Reverse();
+                foreach (int index in index_to_remove) {
+                    bingoCards.RemoveAt(index);
+                }
+                index_to_remove = new();
+            }
+            int last_to_win = wonCards.Last().Item2;
+            return last_to_win;
         }
         public static List<int> ParseChosenNumbers(string inputString) {
             return inputString.Split(",").Select(s => int.Parse(s)).ToList();
