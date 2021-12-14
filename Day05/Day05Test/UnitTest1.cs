@@ -23,5 +23,13 @@ namespace Day05Test {
             int answer = Program.CountVentsPart1(inputStrings);
             Assert.AreEqual(5, answer);
         }
+
+        [Test]
+        public void Test2_Part2() {
+            var inputStrings = File.ReadAllLines("testInput.txt")
+                .ToList();
+            int answer = Program.CountVentsPart2(inputStrings);
+            Assert.AreEqual(12, answer);
+        }
     }
 }
