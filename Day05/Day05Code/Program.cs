@@ -13,17 +13,21 @@ namespace Day05Code {
                 .ToList();
             int answer1 = CountVentsPart1(inputStrings);
             Console.WriteLine($"answer to part 1: {answer1}");
+
             int answer2 = CountVentsPart2(inputStrings);
             Console.WriteLine($"answer to part 2: {answer2}");
         }
+
         public static int CountVentsPart1(List<string> inputStrings) {
             List<List<Vector2>> parsedCoords1 = ParseHorizontalAndVertical(inputStrings);
             return CountMultipleVentsHorizontalAndVertical(parsedCoords1);
         }
         public static List<List<Vector2>> ParseHorizontalAndVertical(List<string> inputStrings) {
             List<List<Vector2>> answer = new();
+
             foreach (var line in inputStrings) {
                 var pairs = line.Replace(" -> ", ",").Split(",").Select(Int32.Parse).ToList();
+
                 // weed out diagonal entries
                 if (pairs[0] == pairs[2] || pairs[1] == pairs[3]){
                     answer.Add(
@@ -57,7 +61,6 @@ namespace Day05Code {
                         pair[0] += horizontal;
                     } 
                 }
-
             }
 
             // group the list by same coords, only leave behind those which are
@@ -66,6 +69,7 @@ namespace Day05Code {
                 .GroupBy(x => x)
                 .Where(g => g.Count() > 1)
                 .Count();
+
             return answer;
         }
 
@@ -142,11 +146,6 @@ namespace Day05Code {
                 .GroupBy(x => x)
                 .Where(g => g.Count() > 1)
                 .Count();
-            //var intermediate = vents
-            //    .GroupBy(x => x)
-            //    .Where(g => g.Count() > 1).ToList();
-            //var answer_list = intermediate.Distinct().ToList();
-            //int answer = answer_list.Count();
 
             return answer;
         }
