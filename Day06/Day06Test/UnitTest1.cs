@@ -9,8 +9,12 @@ namespace Day06Test {
     public class Tests {
 
         [Test]
-        public void Test1() {
-            Assert.Pass();
+        public void Test1_Part1() {
+            string initial_state = "3,4,3,1,2";
+            Dictionary<int, int> Population = Program.ParseInputPart1(initial_state);
+            int answer = Program.CountPopulationAfterNGenerations(Population, 80);
+            Assert.AreEqual(5934, answer);
+        }
         }
     }
 }
