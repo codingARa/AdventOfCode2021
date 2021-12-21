@@ -34,6 +34,7 @@ namespace Day07Code {
             int[] horizontalPositions = ParseInputString(inputString);
             int minPosition = horizontalPositions.Min();
             int amountToCount = horizontalPositions.Max() - minPosition;
+
             List<int> possibleFuelExpenditure = new();
             foreach (int position in Enumerable.Range(minPosition, amountToCount)) {
                 int fuelSpent = 0;
@@ -41,6 +42,7 @@ namespace Day07Code {
                     fuelSpent += Math.Abs(crabPos - position);
                 }
                 possibleFuelExpenditure.Add(fuelSpent);
+
             }
             return possibleFuelExpenditure.Min();
         }
@@ -50,14 +52,18 @@ namespace Day07Code {
             int minPosition = horizontalPositions.Min();
             int amountToCount = horizontalPositions.Max() - minPosition;
             List<int> possibleFuelExpenditure = new();
+            int minFuelYet = int.MaxValue;
+
             foreach (int position in Enumerable.Range(minPosition, amountToCount)) {
                 int distanceToWalk = 0;
                 int fuelSpent = 0;
                 foreach(int crabPos in horizontalPositions) {
                     distanceToWalk = Math.Abs(crabPos - position);
                     fuelSpent += Enumerable.Range(1, distanceToWalk).Sum();
+                    if (fuelSpent >= minFuelYet) { break; }
                 }
                 possibleFuelExpenditure.Add(fuelSpent);
+                minFuelYet = possibleFuelExpenditure.Min();
             }
             return possibleFuelExpenditure.Min();
         }
