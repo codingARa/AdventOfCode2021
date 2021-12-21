@@ -14,5 +14,12 @@ namespace Day07Test {
             int fuel = Program.CrabFuelConsumptionPart1(input);
             Assert.AreEqual(37, fuel);
         }
+
+        [Test]
+        public void Test2_Part2() {
+            string input = "16,1,2,0,4,2,7,1,2,14";
+            int fuel = Program.CrabFuelConsumptionPart2(input);
+            Assert.AreEqual(168, fuel);
+        }
     }
 }
