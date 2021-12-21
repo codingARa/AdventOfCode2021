@@ -7,13 +7,12 @@ using System.Numerics;
 
 namespace Day07Test {
     public class Tests {
-        [SetUp]
-        public void Setup() {
-        }
 
         [Test]
-        public void Test1() {
-            Assert.Pass();
+        public void Test1_Part1() {
+            string input = "16,1,2,0,4,2,7,1,2,14";
+            int fuel = Program.CrabFuelConsumptionPart1(input);
+            Assert.AreEqual(37, fuel);
         }
     }
 }
