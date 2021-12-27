@@ -9,7 +9,8 @@ namespace Day08Test {
     public class Tests {
         [Test]
         public void Test1() {
-            Assert.Pass();
+            int answer = Program.SolutionPart1("testinput.txt");
+            Assert.AreEqual(26, answer);
         }
     }
 }

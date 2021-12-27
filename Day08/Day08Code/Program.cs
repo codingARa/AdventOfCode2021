@@ -5,15 +5,13 @@ using System.Linq;
 using System.Numerics;
 
 namespace Day08Code {
-    class Program {
+    public class Program {
         static void Main(string[] args) {
             Console.WriteLine("Let's solve Day07!");
 
-            //var inputStrings = File.ReadAllLines("input.txt")
-            //    .ToList();
-            //int answer1 = 0;
-            //Console.WriteLine($"answer to part 1: {answer1}");
-            string teststring = "badc bd dbeaf cfdbge dfb cfbdea efbag edcfgab dcafe degfca | eacfd acdfbe cbdegf fcbaedg";
+            int answer1 = SolutionPart1("input.txt");
+            Console.WriteLine($"answer to part 1: {answer1}");
+/*            string teststring = "badc bd dbeaf cfdbge dfb cfbdea efbag edcfgab dcafe degfca | eacfd acdfbe cbdegf fcbaedg";
             var input = teststring.Split("|")[0]
                 .Trim()
                 .Split(" ")
@@ -22,8 +20,22 @@ namespace Day08Code {
 
             Dictionary<string,string> segments = FindSegments(input);
             Dictionary<int,string> figures = FindFigures(input);
-
+*/
         }
+
+        public static int SolutionPart1(string inputFile) {
+            var inputStrings = File.ReadAllLines(inputFile).ToList();
+            int x = 0;
+            foreach (var input in inputStrings) {
+                x += input.Split("|")[1]
+                    .Trim()
+                    .Split(" ")
+                    .Where(s => s.Length == 2 || s.Length == 3 || s.Length == 4 || s.Length == 7)
+                    .Count();
+            }
+            return x; 
+        }
+
         /// <summary>
         /// find all segments from input
         /// </summary>
