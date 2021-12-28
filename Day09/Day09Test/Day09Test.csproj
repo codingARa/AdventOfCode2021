@@ -13,4 +13,14 @@
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Day09Code\Day09Code.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="testinput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
