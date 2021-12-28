@@ -41,7 +41,7 @@ namespace Day08Code {
         /// </summary>
         /// <param name="input"></param>
         /// <returns>Dictionary of standard segment-position to current position</returns>
-        private static Dictionary<string,string> FindSegments(Dictionary<int, string[]> input) {
+        public static Dictionary<string,string> FindSegments(Dictionary<int, string[]> input) {
             Dictionary<string, string> results = new();
             //1 
             results.Add("a", StringDifference(input[3][0], input[2][0]));
@@ -84,19 +84,21 @@ namespace Day08Code {
         /// </summary>
         /// <param name="input"></param>
         /// <returns>Dictionary of figure to specific string sequence</returns>
-        private static Dictionary<int,string> FindFigures(Dictionary<int, string[]> input) {
-            Dictionary<int, string> results = new();
-            results.Add(1, input[2][0]);
-            results.Add(7, input[3][0]);
-            results.Add(4, input[4][0]);
-            results.Add(8, input[7][0]);
+        public static Dictionary<string,int> FindFigures(Dictionary<int, string[]> input) {
+            Dictionary<int, string> help = new();
+            help.Add(1, input[2][0]);
+            help.Add(7, input[3][0]);
+            help.Add(4, input[4][0]);
+            help.Add(8, input[7][0]);
 
             // find figure six
             string[] figureNineAndZero = new String[2];
             int i = 0;
             foreach (var item in input[6]) {
-                var x = StringDifference(item, results[7]);
-                if (x.Length == 4) results.Add(6, item);
+                var x = StringDifference(item, help[7]);
+                if (x.Length == 4) {
+                    help.Add(6, item);
+                    }
                 else {
                     figureNineAndZero[i] = item;
                     i++;
@@ -107,8 +109,10 @@ namespace Day08Code {
             string[] figureTwoAndThree = new String[2];
             int j = 0;
             foreach (var item in input[5]) {
-                var x = StringDifference(results[6], item);
-                if (x.Length == 1) results.Add(5, item);
+                var x = StringDifference(help[6], item);
+                if (x.Length == 1) {
+                    help.Add(5, item);
+                }
                 else {
                     figureTwoAndThree[j] = item;
                     j++;
@@ -117,20 +121,34 @@ namespace Day08Code {
 
             //find figure nine and zero
             foreach (var item in figureNineAndZero) {
-                var x = StringDifference(item, results[5]);
-                if (x.Length == 1) results.Add(9, item);
-                if (x.Length == 2) results.Add(0, item);
+                var x = StringDifference(item, help[5]);
+                if (x.Length == 1) {
+                    help.Add(9, item);
+                }
+                if (x.Length == 2) {
+                    help.Add(0, item);
+                }
             }
 
             //find figure two and three
             foreach (var item in figureTwoAndThree) {
-                var x = StringDifference(item, results[9]);
-                if (x.Length == 1) results.Add(3, item);
-                if (x.Length == 2) results.Add(2, item); 
+                var x = StringDifference(help[9], item);
+                if (x.Length == 1) {
+                    help.Add(3, item);
+                }
+                if (x.Length == 2) {
+                    help.Add(2, item);
+                }
             }
+
+            Dictionary<string, int> results = new();
+            // result-dictionary is ordered figure-string to number
+            results = help.ToDictionary(x => string.Concat(x.Value.OrderBy(c => c)), x => x.Key);
+            //results = help.ToDictionary(x => x.Value, x => x.Key);
 
             return results;
         }
+
         static string StringDifference(string minuend, string subtrahend) {
             foreach (char c in subtrahend) {
                 minuend = minuend.Replace(c.ToString(), string.Empty);
