@@ -11,16 +11,9 @@ namespace Day08Code {
 
             int answer1 = SolutionPart1("input.txt");
             Console.WriteLine($"answer to part 1: {answer1}");
-/*            string teststring = "badc bd dbeaf cfdbge dfb cfbdea efbag edcfgab dcafe degfca | eacfd acdfbe cbdegf fcbaedg";
-            var input = teststring.Split("|")[0]
-                .Trim()
-                .Split(" ")
-                .GroupBy(x => x.Length)
-                .ToDictionary(group => group.Key, group => group.ToArray());
 
-            Dictionary<string,string> segments = FindSegments(input);
-            Dictionary<int,string> figures = FindFigures(input);
-*/
+            int answer2 = SolutionPart2("input.txt");
+            Console.WriteLine($"answer to part 2: {answer2}");
         }
 
         public static int SolutionPart1(string inputFile) {
@@ -34,6 +27,33 @@ namespace Day08Code {
                     .Count();
             }
             return x; 
+        }
+
+        public static int SolutionPart2(string inputFile) {
+            var inputStrings = File.ReadAllLines(inputFile).ToList();
+            int sum = 0;
+            foreach (var line in inputStrings) {
+
+                var input = line.Split("|")[0]
+                    .Trim()
+                    .Split(" ")
+                    .GroupBy(x => x.Length)
+                    .ToDictionary(group => group.Key, group => group.ToArray());
+
+                Dictionary<string, int> figures = FindFigures(input);
+
+                var x = line.Split("|")[1]
+                    .Trim()
+                    .Split(" ");
+
+                string tallyString = string.Empty;
+                foreach (var item in x) {
+                    string f = String.Concat(item.OrderBy(c => c));
+                    tallyString = string.Concat(tallyString, figures[f] );
+                }
+                sum += int.Parse(tallyString);
+            }
+            return sum; 
         }
 
         /// <summary>
