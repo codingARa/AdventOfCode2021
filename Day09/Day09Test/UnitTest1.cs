@@ -1,9 +1,5 @@
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using Day09Code;
-using System.Numerics;
 
 namespace Day09Test {
     public class Tests {
@@ -11,8 +7,15 @@ namespace Day09Test {
         [Test]
         public void Test1_Part1() {
             var nums = Program.ParseInput("testinput.txt");
-            int answer = Program.SolutionPart1(nums, 10, 5);
+            int answer = Program.SolutionPart1(nums, nums.GetLength(0), nums.GetLength(1));
             Assert.AreEqual(15, answer);
+        }
+
+        [Test]
+        public void Test2_Part2() {
+            var nums = Program.ParseInput("testinput.txt");
+            int answer = Program.SolutionPart2(nums, nums.GetLength(0), nums.GetLength(1));
+            Assert.AreEqual(1134, answer);
         }
     }
 }
