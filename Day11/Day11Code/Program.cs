@@ -1,4 +1,4 @@
-﻿ namespace Day11Code;
+﻿namespace Day11Code;
 
 public class Program
 {
@@ -9,6 +9,9 @@ public class Program
 
         var answer1 = SolutionPart1(nums, 100);
         Console.WriteLine($"Answer1: total number of flashes: {answer1.Item2}");
+
+        var answer2 = SolutionPart2(nums);
+        Console.WriteLine($"Answer2: All squids flash simultaneously at step: {answer2.Item2}");
     }
 
     public static (int[,], int) SolutionPart1(int[,] nums, int steps)
@@ -24,6 +27,18 @@ public class Program
         }
 
         return (nums, flashes);
+    }
+    public static (int[,], int) SolutionPart2(int[,] nums)
+    {
+        var didAllFlash = false;
+        var step = 0;
+        while (!didAllFlash)
+        {
+            step++;
+            nums = IncrementSquids(nums);
+            didAllFlash = DidAllSquidsFlashSimultaneously(nums, step);
+        }
+        return (nums, step);
     }
 
     /// <summary>
@@ -53,7 +68,7 @@ public class Program
                 nums[row, col]++;
 
                 // flashing
-                if (nums[row, col] == 10)
+                if (nums[row, col] >= 10)
                 {
                     nums[row,col] = -1;
                     q.Enqueue((row, col));
@@ -79,9 +94,6 @@ public class Program
     /// <returns></returns>
     private static int[,] EvalutePropagationQueue(int[,] nums, int totalRows, int totalCols, Queue<(int, int)> q)
     {
-        var neighborsVisited = 0;
-        var newlyQueued = 0;
-        
         while (q.Count > 0)
         {
             var coords = q.Dequeue();
@@ -91,13 +103,11 @@ public class Program
 
             foreach (var neighbor in neighborhood)
             {
-                neighborsVisited++;
-                (newNums, newQ) = IncrementEnergyOfNeighborhoodAndQueueAgain(neighbor, nums);
+                (newNums, newQ) = IncrementEnergyOfNeighborAndQueueAgain(neighbor, nums);
                 nums = newNums;
                 if (newQ.Item1 != -1)
                 {
                     q.Enqueue(newQ);
-                    newlyQueued++;
                 }
             }
         }
@@ -149,10 +159,10 @@ public class Program
     }
 
     /// <summary>
-    /// Increment the energy level of the neighorhood of already flashing
-    /// squids. Each neighbor is checked, if they are themselve already
-    /// flashing. If a neighbor gains enough energy to flash themselves, a
-    /// corresponding queue element will be returned.
+    /// Increment the energy level of a neighor of already flashing squids. The
+    /// neighbor is checked, if they are themselve already flashing. If the
+    /// neighbor gains enough energy to flash themselves, a corresponding queue
+    /// element will be returned.
     /// </summary>
     /// <param name="coord">tuple (x,y) of a particular neigbor in the
     /// neighborhood of a flashing squid</param>
@@ -160,19 +170,19 @@ public class Program
     /// <returns>tuple with the updated field of squids, and a potential new
     /// queue element for squids which reached the energy level to flash
     /// themselves</returns>
-    private static (int[,], (int,int)) IncrementEnergyOfNeighborhoodAndQueueAgain((int, int) coord, int[,] nums)
+    private static (int[,], (int,int)) IncrementEnergyOfNeighborAndQueueAgain((int, int) coord, int[,] nums)
     {
         (int, int) newQ = (-1,-1);
         // increment, if it is not in the current propagation wave (-1) and
         // it has not enough energy to flash (10)
-        if (nums[coord.Item1, coord.Item2] >= 0 && nums[coord.Item1, coord.Item2] < 10)
+        if (nums[coord.Item1, coord.Item2] > 0 && nums[coord.Item1, coord.Item2] < 10)
         {
             nums[coord.Item1, coord.Item2]++;
         }
         // ad squid to current propagation wave with the newQ element and by
         // marking it as part of the current propagation wave, if above
         // increment tipped it's energy treshold to flash
-        if (nums[coord.Item1, coord.Item2] == 10)
+        if (nums[coord.Item1, coord.Item2] >= 10)
         {
             nums[coord.Item1, coord.Item2] = -1;
             newQ = (coord.Item1, coord.Item2);
@@ -204,6 +214,41 @@ public class Program
         }
         return (nums, flashes);
     } 
+
+    /// <summary>
+    /// Determine, if all squids flash at once by counting all squids with
+    /// value -1 and setting it back to the correct value of 0.
+    /// </summary>
+    /// <param name="nums">current field of squids</param>
+    /// <returns>boolean, if all squids did flash at once</returns>
+    private static bool DidAllSquidsFlashSimultaneously(int[,] nums, int steps)
+    {
+        if (steps == 224)
+        {
+            Console.WriteLine("Moin");
+        }
+        var totalRows = nums.GetLength(0);
+        var totalCols = nums.GetLength(1);
+        int flashes = 0;
+        for (var row = 0; row < totalRows; row++)
+        {
+            for (var col = 0; col < totalCols; col++)
+            {
+                if (nums[row, col] == -1)
+                {
+                    nums[row, col] = 0;
+                    flashes++;
+                }
+            }
+        }
+
+        if (steps == 224)
+        {
+            Console.WriteLine("Moin");
+        }
+
+        return (flashes == 100);
+    }
 
     /// <summary>
     /// parsing the given textfile
