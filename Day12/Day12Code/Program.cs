@@ -9,12 +9,15 @@ public class Program
 
         var answer1 = SolutionPart1(input);
         Console.WriteLine($"Answer1: {answer1}");
+
+        var answer2 = SolutionPart2(input);
+        Console.WriteLine($"Answer2: {answer2}");
     }
 
     /// <summary>
     /// Searching all possible unique paths through the cave system from start
-    /// to finish. Cave with lower case letters as names can only be traversed
-    /// once in every valid path.
+    /// to finish (breadth first search). Cave with lower case letters as names
+    /// can only be traversed once in every valid path.
     /// </summary>
     /// <param name="connectionDict">dictionary with cave as key and list of
     /// adjacent caves as list</param>
@@ -39,38 +42,102 @@ public class Program
             }
             var adjacentCaves = connectionDict[currentPosition];
 
-            // check all adjacent cave, if they are:
-            // (1) the starting cave => skip
-            // (2) lower case caves => skip, if they are part of the path
-            //     already
-            // (3) in every other case: form a new extended path and queue it
-            //     to be progressed in a later iteration
+            // check all adjacent caves to the current cave
             foreach (var possibleNextCave in adjacentCaves)
             {
-                if (possibleNextCave != "start") // (1)
+                // (1) skip cave, if it's the starting cave
+                if (possibleNextCave == "start")
                 {
-                    if (char.IsLower(possibleNextCave[0])) // (2)
-                    {
-                        if (!currentPath.Contains(possibleNextCave))
-                        {
-                            // (3)
-                            List<string> nextPath = new List<string>(currentPath)
-                            {
-                                possibleNextCave
-                            };
-                            queueOfNotTerminatedPaths.Enqueue(nextPath);
-                        }
-                    }
-                    else
-                    {
-                        // (3)
-                        List<string> nextPath = new List<string>(currentPath) { possibleNextCave };
-                        queueOfNotTerminatedPaths.Enqueue(nextPath);
-                    }
+                    continue;
+                }
+
+                // create nextPath element
+                List<string> nextPath = new(currentPath) { possibleNextCave };
+
+                // (2) append nextPath straight away, if cave is upper case
+                if (char.IsUpper(possibleNextCave[0]))
+                {
+                    queueOfNotTerminatedPaths.Enqueue(nextPath);
+                    continue;
+                }
+
+                // (3) append nextPath, if cave is lower case and not already
+                // in path
+                if (!currentPath.Contains(possibleNextCave))
+                {
+                    queueOfNotTerminatedPaths.Enqueue(nextPath);
                 }
             }
         }
-        return allPossiblePaths.Count();
+        return allPossiblePaths.Count;
+    }
+
+    /// <summary>
+    /// Searching all possible unique paths through the cave system from start
+    /// to finish (breadth first search). A single cave with lower case letters
+    /// can be visited twice per path, every other lower case cave of a path
+    /// can only be traversed once.
+    /// </summary>
+    /// <param name="connectionDict">dictionary with cave as key and list of
+    /// adjacent caves as list</param>
+    /// <returns>number of possible unique path</returns>
+    public static int SolutionPart2(Dictionary<string, List<string>> connectionDict)
+    {
+        var allPossiblePaths = new Stack<List<string>>();
+
+        var queueOfNotTerminatedPaths = new Queue<(List<string>, bool)>();
+        queueOfNotTerminatedPaths.Enqueue((new List<string> { "start" }, false));
+
+        while (queueOfNotTerminatedPaths.Count > 0)
+        {
+            var currentQ = queueOfNotTerminatedPaths.Dequeue();
+            var currentPath = currentQ.Item1;
+            var visitedTwice = currentQ.Item2;
+            var currentPosition = currentPath.Last();
+
+            // termination condition for current path
+            if (currentPosition == "end")
+            {
+                allPossiblePaths.Push(currentPath);
+                continue;
+            }
+            var adjacentCaves = connectionDict[currentPosition];
+
+            // check all adjacent caves to the current cave
+            foreach (var possibleNextCave in adjacentCaves)
+            {
+                // (1) skip cave, if it's the starting cave
+                if (possibleNextCave == "start")
+                {
+                    continue;
+                }
+
+                // create nextPath element
+                List<string> nextPath = new(currentPath) { possibleNextCave };
+
+                // (2) append nextPath straight away, if cave is upper case
+                if (char.IsUpper(possibleNextCave[0]))
+                {
+                    queueOfNotTerminatedPaths.Enqueue((nextPath, visitedTwice));
+                    continue;
+                }
+
+                // (3a) append nextPath, if cave is lower case and not already
+                // in path
+                if (!currentPath.Contains(possibleNextCave))
+                {
+                    queueOfNotTerminatedPaths.Enqueue((nextPath, visitedTwice));
+                }
+                // (3b) append nextPath, if cave is lower and already in path,
+                // but not lower case cave of current path has been visited
+                // twice before
+                else if (!visitedTwice)
+                {
+                    queueOfNotTerminatedPaths.Enqueue((nextPath, true));
+                }
+            }
+        }
+        return allPossiblePaths.Count;
     }
 
     /// <summary>
